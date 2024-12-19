@@ -26,7 +26,7 @@ class Command {
     options: any[];
     deleted: boolean;
     permissionsRequired: string[];
-    callback: (client: any, interaction: any) => void;
+    callback: (client: any, interaction: any) => any;
   };
 
   constructor() {

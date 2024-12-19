@@ -1,6 +1,6 @@
 import * as path from "node:path";
 import getAllFiles from "./getAllFiles";
-export default function (exceptions = []): Array<Object> {
+export = function (exceptions = []): Array<Object> {
   let localCommands = [];
 
   const commandCategories = getAllFiles(

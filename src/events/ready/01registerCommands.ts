@@ -6,7 +6,7 @@ import getApplicationCommands from "../../utils/getApplicationCommands";
 import getLocalCommands from "../../utils/getLocalCommands";
 import { Command } from "../../classes";
 
-export default async function (client: Client): Promise<void> {
+export = async function (client: Client): Promise<void> {
   console.log("r");
   try {
     const localCommands = getLocalCommands();
@@ -58,4 +58,4 @@ export default async function (client: Client): Promise<void> {
   } catch (error) {
     console.log(error);
   }
-}
+};

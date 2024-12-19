@@ -4,7 +4,7 @@ import { Client } from "../../classes";
 
 const getLocalCommands = require("../../utils/getLocalCommands");
 
-const blacklistSchema = require("../../models/Blacklist");
+// const blacklistSchema = require("../../models/Blacklist");
 
 /**
  *
@@ -12,7 +12,7 @@ const blacklistSchema = require("../../models/Blacklist");
  * @param {ChatInputCommandInteraction} interaction
  * @returns
  */
-export default async function (
+export = async function (
   client: Client,
   interaction: Interaction
 ): Promise<void> {
@@ -46,6 +46,7 @@ export default async function (
           return;
         }
       }
+      /**
       const blacklistDb = await blacklistSchema.findOne({
         id: 1,
       });
@@ -72,6 +73,7 @@ export default async function (
         });
         return;
       }
+        */
 
       if (commandObject.permissionsRequired?.length) {
         for (const permission of commandObject.permissionsRequired) {
@@ -160,4 +162,4 @@ export default async function (
   } else {
     return;
   }
-}
+};

@@ -1,7 +1,7 @@
 import { Command } from "../../classes";
 
 const command = new Command()
-  .setName("test")
+  .setName("ping")
   .setDescription("Test bot commands")
   .setDevOnly(false)
   .setTestOnly(false)

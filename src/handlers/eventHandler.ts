@@ -10,9 +10,12 @@ export default function eventHandler(client: Client): void {
     eventFiles.sort((a: any, b: any) => a > b);
 
     const eventName = eventFolder.replace(/\\/g, "/").split("/").pop();
-
+    console.log(eventName);
+    console.log(eventFolder);
+    console.log(eventFiles);
     client.on(eventName, async (arg: any) => {
       for (const eventFile of eventFiles) {
+        console.log(eventFile);
         const eventFunction = require(eventFile);
         await eventFunction(client, arg);
       }
