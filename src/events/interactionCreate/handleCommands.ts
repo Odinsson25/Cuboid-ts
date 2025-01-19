@@ -1,5 +1,5 @@
 import { devs, testServer } from "../../../config.json";
-import { GuildMember, Collection, Interaction, Client } from "discord.js";
+import { GuildMember, Interaction, Client } from "discord.js";
 import getLocalCommands from "../../utils/getLocalCommands";
 import { Command } from "../../classes";
 

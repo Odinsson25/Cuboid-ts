@@ -22,8 +22,7 @@ const client = new Client({
     GatewayIntentBits.GuildEmojisAndStickers,
   ],
 });
-console.log(client.user?.username);
-
+client.on("ready", () => console.log("ready!")); // this does work
 process.on("unhandledRejection", (reason, promise) => {
   console.log("❗ Unhandled Rejection Error");
   console.log(reason, promise);
@@ -43,8 +42,6 @@ process.on("uncaughtException", (err, origin) => {
       .connect(process.env.MONGO_URI!)
       .then(() => console.log("✅ Connected to database."));
     eventHandler(client);
-
-    client.login(process.env.BOTTOKEN);
   } catch (error) {
     console.log("❌ Connection to database failed!");
     console.log(error);

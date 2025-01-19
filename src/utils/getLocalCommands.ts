@@ -15,7 +15,7 @@ export default async function (exceptions = []): Promise<Array<Object>> {
     for (const commandFile of commandFiles) {
       const commandObject = (await import(commandFile)) as Command;
 
-      if ((exceptions as Object[]).includes(commandObject.data.name)) {
+      if ((exceptions as string[]).includes(commandObject.data.name)) {
         continue;
       }
 
