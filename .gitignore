@@ -3,3 +3,5 @@ development.env
 node_modules
 tsconfig.json
 dist
+oldSrc
+node_modules
