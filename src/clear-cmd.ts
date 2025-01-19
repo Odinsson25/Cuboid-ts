@@ -14,7 +14,7 @@ const commands: Object = [
 console.log("🔁 Clearing slash commands...");
 
 (async () => {
-  const rest = new REST({ version: "10" }).setToken(process.env.BOTTOKEN!);
+  const rest = new REST({ version: "10" }).setToken(process.env.TOKEN!);
 
   try {
     await rest.put(Routes.applicationCommands(jsonConfig.clientId), {

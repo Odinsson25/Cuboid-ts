@@ -1,6 +1,6 @@
 import * as path from "path";
 import getAllFiles from "../utils/getAllFiles";
-import { Client } from "../classes";
+import { Client } from "discord.js";
 
 export default function eventHandler(client: Client): void {
   const eventFolders = getAllFiles(path.join(__dirname, "..", "events"), true);
@@ -16,7 +16,7 @@ export default function eventHandler(client: Client): void {
     client.on(eventName, async (arg: any) => {
       for (const eventFile of eventFiles) {
         console.log(eventFile);
-        const eventFunction = require(eventFile);
+        const eventFunction = await import(eventFile);
         await eventFunction(client, arg);
       }
     });

@@ -1,4 +1,4 @@
-import { Client } from "../../classes";
+import { Client } from "discord.js";
 
 import { testServer } from "../../../config.json";
 import areCommandsDifferent from "../../utils/areCommandsDifferent";
@@ -6,10 +6,10 @@ import getApplicationCommands from "../../utils/getApplicationCommands";
 import getLocalCommands from "../../utils/getLocalCommands";
 import { Command } from "../../classes";
 
-export = async function (client: Client): Promise<void> {
+export default async function (client: Client): Promise<void> {
   console.log("r");
   try {
-    const localCommands = getLocalCommands();
+    const localCommands = await getLocalCommands();
     const applicationCommands = await getApplicationCommands(
       client,
       testServer
@@ -58,4 +58,4 @@ export = async function (client: Client): Promise<void> {
   } catch (error) {
     console.log(error);
   }
-};
+}

@@ -1,8 +1,7 @@
-const { devs, testServer } = require("../../../config.json");
-import { GuildMember, Collection, Interaction } from "discord.js";
-import { Client } from "../../classes";
-
-const getLocalCommands = require("../../utils/getLocalCommands");
+import { devs, testServer } from "../../../config.json";
+import { GuildMember, Collection, Interaction, Client } from "discord.js";
+import getLocalCommands from "../../utils/getLocalCommands";
+import { Command } from "../../classes";
 
 // const blacklistSchema = require("../../models/Blacklist");
 
@@ -18,16 +17,16 @@ export = async function (
 ): Promise<void> {
   if (interaction.isChatInputCommand()) {
     if (!interaction.guild || !interaction.member) return;
-    const localCommands = getLocalCommands();
+    const localCommands = await getLocalCommands();
 
     try {
       const commandObject = localCommands.find(
         (cmd: any) => cmd.name === interaction.commandName
-      );
+      ) as Command;
 
       if (!commandObject) return;
 
-      if (commandObject.devOnly) {
+      if (commandObject.data.devOnly) {
         if (!devs.includes((interaction.member as GuildMember).id)) {
           interaction.reply({
             content: "Only developers are allowed to run this command.",
@@ -37,7 +36,7 @@ export = async function (
         }
       }
 
-      if (commandObject.testOnly) {
+      if (commandObject.data.testOnly) {
         if (!(interaction.guild.id === testServer)) {
           interaction.reply({
             content: "This command cannot be ran here.",
@@ -52,7 +51,7 @@ export = async function (
       });
       if (
         blacklistDb?.users?.includes(interaction.user.id) &&
-        !commandObject.devOnly
+        !commandObject.data.devOnly
       ) {
         interaction.reply({
           content:
@@ -64,7 +63,7 @@ export = async function (
 
       if (
         blacklistDb?.guilds?.includes(interaction.guild.id) &&
-        !commandObject.devOnly
+        !commandObject.data.devOnly
       ) {
         interaction.reply({
           content:
@@ -75,13 +74,13 @@ export = async function (
       }
         */
 
-      if (commandObject.permissionsRequired?.length) {
-        for (const permission of commandObject.permissionsRequired) {
+      if (commandObject.data.permissionsRequired?.length) {
+        for (const permission of commandObject.data.permissionsRequired) {
           if (!interaction.memberPermissions?.has(permission)) {
             interaction.reply({
               content:
                 "You do not have enough permissions. `" +
-                commandObject.permissionsRequired.join(", ") +
+                commandObject.data.permissionsRequired.join(", ") +
                 "`",
               ephemeral: true,
             });
@@ -90,8 +89,8 @@ export = async function (
         }
       }
 
-      if (commandObject.botPermissions?.length) {
-        for (const permission of commandObject.botPermissions) {
+      if (commandObject.data.botPermissions?.length) {
+        for (const permission of commandObject.data.botPermissions) {
           const bot = interaction.guild.members.me;
           if (!bot) return;
 
@@ -105,15 +104,15 @@ export = async function (
         }
       }
       /** const { cooldowns } = client;
-      if (!cooldowns[commandObject.name]) {
-        cooldowns.set(commandObject.name, new Collection());
+      if (!cooldowns[commandObject.data.name]) {
+        cooldowns.set(commandObject.data.name, new Collection());
       }
 
       const now = Date.now();
-      const timestamps = cooldowns[commandObject.name];
+      const timestamps = cooldowns[commandObject.data.name];
       const defaultCooldownDuration = 3;
       const cooldownAmount =
-        (commandObject.cooldown ?? defaultCooldownDuration) * 1000;
+        (commandObject.data.cooldown ?? defaultCooldownDuration) * 1000;
 
       if (timestamps.has(interaction.user.id)) {
         const expirationTime =
@@ -122,18 +121,18 @@ export = async function (
         if (now < expirationTime) {
           const expiredTimestamp = Math.round(expirationTime / 1_000);
           interaction.reply({
-            content: `Please wait, you are on a cooldown for \`${commandObject.name}\`. You can use it again <t:${expiredTimestamp}:R>.`,
+            content: `Please wait, you are on a cooldown for \`${commandObject.data.name}\`. You can use it again <t:${expiredTimestamp}:R>.`,
             ephemeral: true,
           });
           return;
         }
       }
  */
-      await commandObject.callback(client, interaction);
+      await commandObject.data.callback(client, interaction);
       console.log(`=-= ${
         interaction.commandName ||
         interaction.command?.name ||
-        commandObject.name
+        commandObject.data.name
       } / ${interaction.commandId || interaction.command?.id} executed.
        By ${interaction.user.username}/${interaction.user.id} in G${
         interaction.guild.id

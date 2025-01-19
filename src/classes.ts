@@ -1,21 +1,21 @@
 import * as djs from "discord.js";
 
-class Client extends djs.Client<true> {
-  cooldowns: Object = {};
-  constructor() {
-    super({
-      intents: [
-        djs.GatewayIntentBits.Guilds,
-        djs.GatewayIntentBits.GuildMembers,
-        djs.GatewayIntentBits.GuildMessages,
-        djs.GatewayIntentBits.GuildVoiceStates,
-        djs.GatewayIntentBits.GuildPresences,
-        djs.GatewayIntentBits.MessageContent,
-        djs.GatewayIntentBits.GuildEmojisAndStickers,
-      ],
-    });
-  }
-}
+// class Client extends djs.Client<true> {
+//   cooldowns: Object = {};
+//   constructor() {
+//     super({
+//       intents: [
+//         djs.GatewayIntentBits.Guilds,
+//         djs.GatewayIntentBits.GuildMembers,
+//         djs.GatewayIntentBits.GuildMessages,
+//         djs.GatewayIntentBits.GuildVoiceStates,
+//         djs.GatewayIntentBits.GuildPresences,
+//         djs.GatewayIntentBits.MessageContent,
+//         djs.GatewayIntentBits.GuildEmojisAndStickers,
+//       ],
+//     });
+//   }
+// }
 
 class Command {
   public data: {
@@ -23,10 +23,11 @@ class Command {
     description: string;
     devOnly: boolean;
     testOnly: boolean;
-    options: any[];
+    options: djs.CommandInteractionOption[];
     deleted: boolean;
-    permissionsRequired: string[];
-    callback: (client: Client, interaction: any) => any;
+    permissionsRequired: bigint[];
+    botPermissions: bigint[];
+    callback: (client: djs.Client, interaction: djs.CommandInteraction) => any;
   };
 
   constructor() {
@@ -38,6 +39,7 @@ class Command {
       options: [],
       deleted: false,
       permissionsRequired: [],
+      botPermissions: [],
       callback: () => {},
     };
   }
@@ -62,17 +64,23 @@ class Command {
     return this;
   }
 
-  setOptions(options: any[]): this {
+  setOptions(options: djs.CommandInteractionOption[]): this {
     this.data.options = options;
     return this;
   }
 
-  setPermissionsRequired(permissions: string[]): this {
+  setPermissionsRequired(permissions: bigint[]): this {
     this.data.permissionsRequired = permissions;
     return this;
   }
+  setBotPermissionhs(permissions: bigint[]): this {
+    this.data.botPermissions = permissions;
+    return this;
+  }
 
-  callback(callback: (client: Client, interaction: any) => void): this {
+  callback(
+    callback: (client: djs.Client, interaction: djs.CommandInteraction) => void
+  ): this {
     this.data.callback = callback;
     return this;
   }
@@ -89,11 +97,11 @@ class Command {
 /**
 // Voorbeeld van hoe je het kunt gebruiken:
 const command = new Command()
-  .setName("testCommand")
+  .setName("testcommand")
   .setDescription("This is a test command")
   .setDevOnly(true)
   .setTestOnly(false)
-  .setOptions([{ type: "string", name: "example" }])
+  .setOptions([{ type: "string", name: "example", description: "hi" }])
   .setPermissionsRequired(["ADMIN"])
   .setCallback((client, interaction) => {
     console.log("Command executed");
@@ -103,4 +111,4 @@ const command = new Command()
 console.log(command.getData());
 */
 
-export { Client, Command };
+export { Command };

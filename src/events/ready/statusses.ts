@@ -1,6 +1,6 @@
 import { ActivityType } from "discord.js";
 import * as jsonConfig from "../../../config.json";
-import { Client } from "../../classes";
+import { Client } from "discord.js";
 
 module.exports = (client: Client) => {
   let statusses = [
@@ -39,6 +39,6 @@ module.exports = (client: Client) => {
     statusCount++;
     if (statusCount === statusses.length) statusCount = 0;
 
-    client.user.setActivity(statusses[statusCount]);
+    client.user?.setActivity(statusses[statusCount]);
   }, 5 * 1000);
 };

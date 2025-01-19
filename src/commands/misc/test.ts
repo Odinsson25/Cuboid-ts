@@ -1,3 +1,4 @@
+import { ApplicationCommandOptionType, PermissionFlagsBits } from "discord.js";
 import { Command } from "../../classes";
 
 const command = new Command()
@@ -5,11 +6,16 @@ const command = new Command()
   .setDescription("Test bot commands")
   .setDevOnly(false)
   .setTestOnly(false)
-  .setOptions([{ type: "string", name: "example" }])
-  .setPermissionsRequired(["ADMIN"])
+  .setOptions([{ type: ApplicationCommandOptionType.String, name: "example" }])
+  .setPermissionsRequired([
+    PermissionFlagsBits.Administrator,
+    PermissionFlagsBits.SendMessages,
+  ])
   .setDeleted(false)
 
   .callback(async (client, interaction) => {
+    interaction.reply("Yippie!");
+
     console.log("Command executed! This works");
   });
 

@@ -1,4 +1,4 @@
-import { Client } from "../classes";
+import { Client } from "discord.js";
 
 export default async function (client: Client, guildId: string): Promise<any> {
   let applicationCommands;
@@ -7,8 +7,8 @@ export default async function (client: Client, guildId: string): Promise<any> {
     const guild = await client.guilds.fetch(guildId);
     applicationCommands = guild.commands;
   } else {
-    applicationCommands = await client.application.commands;
+    applicationCommands = await client.application?.commands;
   }
-  await applicationCommands.fetch({});
+  await applicationCommands?.fetch({});
   return applicationCommands;
 }

@@ -7,12 +7,22 @@
  */
 
 import "dotenv/config";
-import { GatewayIntentBits, Partials, Collection } from "discord.js";
 import mongoose from "mongoose";
 import eventHandler from "./handlers/eventHandler";
-import { Client } from "./classes";
-
-const client = new Client();
+// import { Client } from "./classes";
+import { Client, GatewayIntentBits } from "discord.js";
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildVoiceStates,
+    GatewayIntentBits.GuildPresences,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildEmojisAndStickers,
+  ],
+});
+console.log(client.user?.username);
 
 process.on("unhandledRejection", (reason, promise) => {
   console.log("❗ Unhandled Rejection Error");
