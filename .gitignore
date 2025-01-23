@@ -5,3 +5,7 @@ tsconfig.json
 dist
 oldSrc
 node_modules
+.commandkit
+dist
+.prettierrc
+commandkit.mjs
