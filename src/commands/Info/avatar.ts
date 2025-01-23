@@ -9,17 +9,17 @@ import {
 	AttachmentBuilder,
 } from "discord.js";
 export const data: CommandData = {
-	name: "banner",
-	description: "View a user's banner",
+	name: "avatar",
+	description: "View a user's avatar",
 	options: [
 		{
 			name: "guild",
-			description: "Guild banner",
+			description: "Guild avatar",
 			type: ApplicationCommandOptionType.Subcommand,
 		},
 		{
 			name: "user",
-			description: "User banner",
+			description: "User avatar",
 			type: ApplicationCommandOptionType.Subcommand,
 			options: [
 				{
@@ -39,8 +39,8 @@ export const run = async ({ interaction, handler }: SlashCommandProps) => {
 			let user = interaction.options.getUser("user") || interaction.user;
 			user = await user.fetch();
 			if (!user) return;
-			if (!user.banner)
-				return interaction.followUp("User does not have a banner.");
+			if (!user.avatar)
+				return interaction.followUp("User does not have a avatar.");
 			const dname: string =
 				(user.displayName as string).substring(
 					user.username.length - 1
@@ -48,10 +48,10 @@ export const run = async ({ interaction, handler }: SlashCommandProps) => {
 					? user.displayName + "'"
 					: user.displayName + "'s";
 			const userembed = new EmbedBuilder()
-				.setTitle(`${dname} banner`)
+				.setTitle(`${dname} avatar`)
 				.setColor(user.hexAccentColor || null)
 				.setImage(
-					`https://cdn.discordapp.com/banners/${user.id}/${user.banner}.png?size=4096`
+					`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=4096`
 				);
 			interaction.followUp({ embeds: [userembed] });
 			break;
@@ -59,16 +59,16 @@ export const run = async ({ interaction, handler }: SlashCommandProps) => {
 		case "guild":
 			const guild =
 				(await interaction.guild?.fetch()) || interaction.guild;
-			if (!guild?.banner)
-				return interaction.followUp("User does not have a banner.");
+			if (!guild?.icon)
+				return interaction.followUp("User does not have a avatar.");
 			const gname: string =
 				(guild?.name as string).substring(guild?.name.length - 1) == "s"
 					? guild?.name + "'"
 					: guild?.name + "'s";
 			const embed = new EmbedBuilder()
-				.setTitle(`${gname} banner`)
+				.setTitle(`${gname} avatar`)
 				.setImage(
-					`https://cdn.discordapp.com/banners/${guild.id}/${guild.banner}.png?size=4096`
+					`https://cdn.discordapp.com/avatars/${guild.id}/${guild.icon}.png?size=4096`
 				);
 			interaction.followUp({ embeds: [embed] });
 			break;

@@ -3,21 +3,65 @@ import type {
 	SlashCommandProps,
 	CommandOptions,
 } from "commandkit";
-import { EmbedBuilder, ChannelType } from "discord.js";
+import {
+	EmbedBuilder,
+	ChannelType,
+	GuildPremiumTier,
+	ActionRowBuilder,
+	ButtonBuilder,
+	Emoji,
+	ButtonStyle,
+} from "discord.js";
 
 export const data: CommandData = {
-	name: "ping",
-	description: "Replies with Pong",
+	name: "serverinfo",
+	description: "Replies general serverinfo",
 };
 
-export const run = ({ interaction, handler }: SlashCommandProps) => {
+export const run = async ({ interaction, handler }: SlashCommandProps) => {
+	await interaction.deferReply();
+	const { guild } = interaction;
+	const boosts: string[] = [];
+
+	if (
+		guild?.premiumSubscriptionCount &&
+		guild?.premiumSubscriptionCount > 0
+	) {
+		boosts.push(`${guild?.premiumSubscriptionCount} boosts`);
+	}
+	if (
+		!(
+			guild?.premiumTier == GuildPremiumTier.None ||
+			guild?.premiumTier == null ||
+			guild?.premiumTier == undefined
+		)
+	) {
+		boosts.push(`Boost tier ${guild?.premiumTier}`);
+	}
 	let bots =
-		(interaction.guild?.memberCount || 0) -
-		(interaction.guild?.members.cache.filter((u) => u.user.bot != true)
-			.size || 1000000000000000);
+		(guild?.memberCount || 0) -
+		(guild?.members.cache.filter((u) => u.user.bot != true).size ||
+			1000000000000000);
+
+	const rolesBtn = new ButtonBuilder()
+		.setCustomId("viewServerRoles")
+		.setLabel("View roles")
+		.setEmoji("😄")
+		.setStyle(ButtonStyle.Primary);
+	const emojiBtn = new ButtonBuilder()
+		.setCustomId("viewServerEmoji")
+		.setLabel("View emoji")
+		.setEmoji("🏴")
+		.setStyle(ButtonStyle.Primary);
+
+	const infoBtnRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+		rolesBtn,
+		emojiBtn
+	);
+
 	const userEmbed = new EmbedBuilder()
-		.setTitle(`Server info - ${interaction.guild?.name}`)
-		.setThumbnail(interaction.guild?.iconURL() || "")
+		.setTitle(`Server info - ${guild?.name}`)
+		.setThumbnail(guild?.iconURL() || "")
 		.setAuthor({
 			name: interaction.user.displayName,
 			iconURL: interaction.user.avatarURL() || "",
@@ -25,19 +69,19 @@ export const run = ({ interaction, handler }: SlashCommandProps) => {
 		.setFields(
 			{
 				name: "Members",
-				value: `${interaction.guild?.memberCount}`,
+				value: `${guild?.memberCount}`,
 				inline: true,
 			},
 			{ name: "Bots", value: `${bots >= 0 ? bots : 0}`, inline: true },
 			{
 				name: "Roles",
-				value: `${interaction.guild?.roles.cache.size}`,
+				value: `${guild?.roles.cache.size}`,
 				inline: true,
 			},
 			{
 				name: "Channels",
 				value: `${
-					interaction.guild?.channels.cache.filter(
+					guild?.channels.cache.filter(
 						(c) => c.type === ChannelType.GuildText
 					).size
 				}`,
@@ -46,7 +90,7 @@ export const run = ({ interaction, handler }: SlashCommandProps) => {
 			{
 				name: "Categories",
 				value: `${
-					interaction.guild?.channels.cache.filter(
+					guild?.channels.cache.filter(
 						(c) => c.type === ChannelType.GuildCategory
 					).size
 				}`,
@@ -55,7 +99,30 @@ export const run = ({ interaction, handler }: SlashCommandProps) => {
 			{
 				name: "Voice Channels",
 				value: `${
-					interaction.guild?.channels.cache.filter(
+					guild?.channels.cache.filter(
+						(c) =>
+							c.type === ChannelType.GuildVoice ||
+							c.type === ChannelType.GuildStageVoice
+					).size
+				}`,
+				inline: true,
+			},
+			{
+				name: "Boosts",
+				value: `${
+					boosts.length > 0 ? boosts.join(", ") : "No server boosts"
+				}`,
+				inline: true,
+			},
+			{
+				name: "Emoji's",
+				value: `${guild?.emojis.cache.size}`,
+				inline: true,
+			},
+			{
+				name: "Voice Channels",
+				value: `${
+					guild?.channels.cache.filter(
 						(c) =>
 							c.type === ChannelType.GuildVoice ||
 							c.type === ChannelType.GuildStageVoice
@@ -65,7 +132,7 @@ export const run = ({ interaction, handler }: SlashCommandProps) => {
 			}
 		);
 
-	interaction.followUp({ embeds: [userEmbed] });
+	interaction.followUp({ embeds: [userEmbed], components: [infoBtnRow] });
 };
 
 export const options: CommandOptions = {
