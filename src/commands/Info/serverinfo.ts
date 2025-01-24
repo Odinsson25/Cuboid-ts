@@ -15,7 +15,7 @@ import {
 
 export const data: CommandData = {
 	name: "serverinfo",
-	description: "Replies general serverinfo",
+	description: "Replies with general server info",
 };
 
 export const run = async ({ interaction, handler }: SlashCommandProps) => {
@@ -43,43 +43,32 @@ export const run = async ({ interaction, handler }: SlashCommandProps) => {
 		(guild?.members.cache.filter((u) => u.user.bot != true).size ||
 			1000000000000000);
 
-	const rolesBtn = new ButtonBuilder()
-		.setCustomId("viewServerRoles")
-		.setLabel("View roles")
-		.setEmoji("😄")
-		.setStyle(ButtonStyle.Primary);
-	const emojiBtn = new ButtonBuilder()
-		.setCustomId("viewServerEmoji")
-		.setLabel("View emoji")
-		.setEmoji("🏴")
-		.setStyle(ButtonStyle.Primary);
-
-	const infoBtnRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-		rolesBtn,
-		emojiBtn
-	);
-
 	const userEmbed = new EmbedBuilder()
 		.setTitle(`Server info - ${guild?.name}`)
 		.setThumbnail(guild?.iconURL() || "")
+		.setDescription(
+			guild?.description
+				? "Guild description:\n" + guild.description
+				: "No guild description set"
+		)
 		.setAuthor({
 			name: interaction.user.displayName,
 			iconURL: interaction.user.avatarURL() || "",
 		})
 		.setFields(
 			{
-				name: "Members",
+				name: "👥 Members",
 				value: `${guild?.memberCount}`,
 				inline: true,
 			},
-			{ name: "Bots", value: `${bots >= 0 ? bots : 0}`, inline: true },
+			{ name: "🌐 Bots", value: `${bots >= 0 ? bots : 0}`, inline: true },
 			{
-				name: "Roles",
+				name: "🏴 Roles",
 				value: `${guild?.roles.cache.size}`,
 				inline: true,
 			},
 			{
-				name: "Channels",
+				name: "📺 Channels",
 				value: `${
 					guild?.channels.cache.filter(
 						(c) => c.type === ChannelType.GuildText
@@ -88,7 +77,7 @@ export const run = async ({ interaction, handler }: SlashCommandProps) => {
 				inline: true,
 			},
 			{
-				name: "Categories",
+				name: "🗼 Categories",
 				value: `${
 					guild?.channels.cache.filter(
 						(c) => c.type === ChannelType.GuildCategory
@@ -97,7 +86,7 @@ export const run = async ({ interaction, handler }: SlashCommandProps) => {
 				inline: true,
 			},
 			{
-				name: "Voice Channels",
+				name: "🎙️ Voice Channels",
 				value: `${
 					guild?.channels.cache.filter(
 						(c) =>
@@ -108,29 +97,38 @@ export const run = async ({ interaction, handler }: SlashCommandProps) => {
 				inline: true,
 			},
 			{
-				name: "Boosts",
+				name: "🎆 Boosts",
 				value: `${
 					boosts.length > 0 ? boosts.join(", ") : "No server boosts"
 				}`,
 				inline: true,
 			},
 			{
-				name: "Emoji's",
+				name: "😄 Emoji's",
 				value: `${guild?.emojis.cache.size}`,
 				inline: true,
 			},
 			{
-				name: "Voice Channels",
-				value: `${
-					guild?.channels.cache.filter(
-						(c) =>
-							c.type === ChannelType.GuildVoice ||
-							c.type === ChannelType.GuildStageVoice
-					).size
-				}`,
-				inline: true,
+				name: "🌠 Features",
+				value: `${guild?.features.join(", ") || "No features enabled"}`,
+				inline: false,
 			}
 		);
+	const rolesBtn = new ButtonBuilder()
+		.setCustomId("viewServerRoles")
+		.setLabel("View roles")
+		.setEmoji("🏴")
+		.setStyle(ButtonStyle.Primary);
+	const emojiBtn = new ButtonBuilder()
+		.setCustomId("viewServerEmoji")
+		.setLabel("View emoji")
+		.setEmoji("😄")
+		.setStyle(ButtonStyle.Primary);
+
+	const infoBtnRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+		rolesBtn,
+		emojiBtn
+	);
 
 	interaction.followUp({ embeds: [userEmbed], components: [infoBtnRow] });
 };
