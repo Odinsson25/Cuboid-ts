@@ -60,7 +60,7 @@ export const run = async ({ interaction, handler }: SlashCommandProps) => {
 			const guild =
 				(await interaction.guild?.fetch()) || interaction.guild;
 			if (!guild?.banner)
-				return interaction.followUp("User does not have a banner.");
+				return interaction.followUp("Guild does not have a banner.");
 			const gname: string =
 				(guild?.name as string).substring(guild?.name.length - 1) == "s"
 					? guild?.name + "'"
