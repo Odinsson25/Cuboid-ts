@@ -29,7 +29,6 @@ export const data: CommandData = {
 		},
 	],
 };
-
 export const run = async ({ interaction, handler }: SlashCommandProps) => {
 	await interaction.deferReply();
 	const user: User =
@@ -38,12 +37,11 @@ export const run = async ({ interaction, handler }: SlashCommandProps) => {
 	const devices: string[] = [];
 	const memberObject: GuildMember | undefined =
 		await interaction.guild?.members.fetch(user.id);
-	if (user) {
-	}
 
-	const userAPI = (
-		await request(`https://discord.com/api/v10/users/${user.id}`)
-	).body.json();
+	if (memberObject?.presence?.clientStatus?.desktop)
+		devices.push("🖥️ Desktop");
+	if (memberObject?.presence?.clientStatus?.web) devices.push("🌐 Website");
+	if (memberObject?.presence?.clientStatus?.mobile) devices.push("📲 Mobile");
 
 	const userEmbed = new EmbedBuilder()
 		.setTitle(`User info - ${user?.displayName}`)
@@ -54,7 +52,6 @@ export const run = async ({ interaction, handler }: SlashCommandProps) => {
 			iconURL: interaction.user.avatarURL() || "",
 		})
 		.setFields(
-			{ name: "ID", value: `${user.id}`, inline: false },
 			{ name: "User", value: `${user}`, inline: true },
 			{
 				name: "Global Username",
@@ -69,14 +66,14 @@ export const run = async ({ interaction, handler }: SlashCommandProps) => {
 			{
 				name: "Joined at",
 				value: `<t:${(
-					memberObject?.joinedTimestamp || 0 / 1000
+					(memberObject?.joinedTimestamp || 0) / 1000
 				).toFixed()}:D>`,
 				inline: true,
 			},
 			{
 				name: "Created at",
 				value: `<t:${(
-					memberObject?.user.createdTimestamp || 0 / 1000
+					(memberObject?.user.createdTimestamp || 0) / 1000
 				).toFixed()}:D>`,
 				inline: true,
 			},
@@ -88,26 +85,38 @@ export const run = async ({ interaction, handler }: SlashCommandProps) => {
 						: "Not a booster"
 				}`,
 				inline: true,
+			},
+			{ name: "User ID", value: `${user.id}`, inline: true },
+			{
+				name: "Online devices",
+				value: `${
+					devices.length > 0 ? devices.join("\n") : "Not online"
+				}`,
+				inline: true,
 			}
+
 			// { name: "Activities", value: `${userActivities?.join("\n") || "No activities"}`, inline: false },
 		);
-	const rolesBtn = new ButtonBuilder()
-		.setCustomId("viewServerRoles")
-		.setLabel("View roles")
-		.setEmoji("🏴")
-		.setStyle(ButtonStyle.Primary);
-	const emojiBtn = new ButtonBuilder()
-		.setCustomId("viewServerEmoji")
-		.setLabel("View emoji")
-		.setEmoji("😄")
-		.setStyle(ButtonStyle.Primary);
+	// const rolesBtn = new ButtonBuilder()
+	// 	.setCustomId("viewServerRoles")
+	// 	.setLabel("View roles")
+	// 	.setEmoji("🏴")
+	// 	.setStyle(ButtonStyle.Primary);
+	// const emojiBtn = new ButtonBuilder()
+	// 	.setCustomId("viewServerEmoji")
+	// 	.setLabel("View emoji")
+	// 	.setEmoji("😄")
+	// 	.setStyle(ButtonStyle.Primary);
 
-	const infoBtnRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-		rolesBtn,
-		emojiBtn
-	);
+	// const infoBtnRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+	// 	rolesBtn,
+	// 	emojiBtn
+	// );
 
-	interaction.followUp({ embeds: [userEmbed], components: [infoBtnRow] });
+	interaction.followUp({
+		embeds: [userEmbed],
+		//  components: [infoBtnRow]
+	});
 };
 
 export const options: CommandOptions = {
