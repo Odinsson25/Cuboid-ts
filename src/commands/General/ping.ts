@@ -9,8 +9,12 @@ export const data: CommandData = {
 	description: "Replies with Pong",
 };
 
-export const run = async ({ interaction, handler }: SlashCommandProps) => {
-	interaction.reply("Pong!");
+export const run = async ({
+	interaction,
+	handler,
+	client,
+}: SlashCommandProps) => {
+	interaction.reply(`Pong! ${client.ws.ping}ms WS Ping`);
 };
 
 export const options: CommandOptions = {
