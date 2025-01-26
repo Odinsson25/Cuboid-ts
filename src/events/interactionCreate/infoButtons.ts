@@ -15,9 +15,8 @@ export default async (interaction: ButtonInteraction, client: Client) => {
 
 		const serverRolesEmbed = new EmbedBuilder()
 			.setAuthor({
-				name: interaction.user.displayName,
-				iconURL: interaction.user.displayAvatarURL(),
-				url: `https://discord.com/users/${interaction.user.id}`,
+				name: interaction.guild.name,
+				iconURL: interaction.guild.iconURL() || "",
 			})
 			.setColor(jsonConfig.colors.mainColor as ColorResolvable)
 			.setTitle(`Roles - ${interaction.guild.name}`)
@@ -41,14 +40,12 @@ export default async (interaction: ButtonInteraction, client: Client) => {
 				e.id
 			}> - ${e.name?.replace("_", "\\_")}`;
 			emojiArr.push(newEmoji);
-			// console.log(newEmoji)
 		});
 		emojis = emojiArr.length > 0 ? emojiArr.join("\n") : "No emoji's";
 		const serverEmojiEmbed = new EmbedBuilder()
 			.setAuthor({
-				name: interaction.user.displayName,
-				iconURL: interaction.user.displayAvatarURL(),
-				url: `https://discord.com/users/${interaction.user.id}`,
+				name: interaction.guild.name,
+				iconURL: interaction.guild.iconURL() || "",
 			})
 			.setColor(jsonConfig.colors.mainColor as ColorResolvable)
 			.setTitle(`Emojis - ${interaction.guild.name}`)
