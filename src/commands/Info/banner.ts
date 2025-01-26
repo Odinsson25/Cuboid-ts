@@ -47,12 +47,14 @@ export const run = async ({ interaction, handler }: SlashCommandProps) => {
 				) == "s"
 					? user.displayName + "'"
 					: user.displayName + "'s";
+			const uImgUrl = user.bannerURL()?.includes(".gif")
+				? `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.gif?size=4096`
+				: `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.png?size=4096`;
+
 			const userembed = new EmbedBuilder()
 				.setTitle(`${dname} banner`)
 				.setColor(user.hexAccentColor || null)
-				.setImage(
-					`https://cdn.discordapp.com/banners/${user.id}/${user.banner}.png?size=4096`
-				);
+				.setImage(uImgUrl);
 			interaction.followUp({ embeds: [userembed] });
 			break;
 
@@ -65,11 +67,13 @@ export const run = async ({ interaction, handler }: SlashCommandProps) => {
 				(guild?.name as string).substring(guild?.name.length - 1) == "s"
 					? guild?.name + "'"
 					: guild?.name + "'s";
+			const gImgUrl = guild.bannerURL()?.includes(".gif")
+				? `https://cdn.discordapp.com/banners/${guild.id}/${guild.banner}.gif?size=4096`
+				: `https://cdn.discordapp.com/banners/${guild.id}/${guild.banner}.png?size=4096`;
+
 			const embed = new EmbedBuilder()
 				.setTitle(`${gname} banner`)
-				.setImage(
-					`https://cdn.discordapp.com/banners/${guild.id}/${guild.banner}.png?size=4096`
-				);
+				.setImage(gImgUrl);
 			interaction.followUp({ embeds: [embed] });
 			break;
 	}
