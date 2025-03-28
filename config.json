@@ -88,5 +88,9 @@
 			},
 			"details": "Official Manager from Cuboid."
 		}
+	},
+	"profanityList": {
+		"strictMatch": ["kut", "hoer"],
+		"partialMatch": ["kanker"]
 	}
 }
