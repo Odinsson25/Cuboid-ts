@@ -1,10 +1,11 @@
 import { Schema, model } from "mongoose";
+import { Punishment } from "../Enums/Profanity";
 
 export interface ISchema {
 	guildId: string;
 	strictMatch: string[];
 	partialMatch: string[];
-	punishment: string | number | null;
+	punishment: number | null;
 }
 const schema = new Schema<ISchema>({
 	guildId: {
@@ -15,8 +16,8 @@ const schema = new Schema<ISchema>({
 	partialMatch: [],
 	punishment: {
 		type: String || Number || null,
-		default: null,
+		default: Punishment.Delete,
 	},
 });
 
-export default model("Profanity", schema);
+export default model<ISchema>("Profanity", schema);

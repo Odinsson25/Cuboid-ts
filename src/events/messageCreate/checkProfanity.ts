@@ -10,14 +10,16 @@ import * as Profanity from "../../Schemas/Profanity";
 import stringContainsArrItems from "../../functions/stringContainsArrItems";
 
 import { CheckType, Punishment } from "../../Enums/Profanity";
+import handleProfanity from "../../functions/handleProfanity";
 export default async (message: Message, client: Client) => {
-	console.log("triggered");
+	// console.log("triggered");
 	if (message.author.bot) return;
 
 	const list: Profanity.ISchema | null = await Profanity.default.findOne({
 		guildId: message.guild?.id,
 	});
 	if (!list) {
+		console.log("no list found");
 		const newList = jsonConfig.profanityList;
 		const check =
 			(await stringContainsArrItems(
@@ -31,7 +33,7 @@ export default async (message: Message, client: Client) => {
 				CheckType.Strict
 			));
 		if (check == true) {
-			message.delete();
+			await handleProfanity(message, Punishment.Delete);
 		}
 
 		return;
@@ -49,7 +51,8 @@ export default async (message: Message, client: Client) => {
 			CheckType.Strict
 		));
 	if (check == true) {
-		message.delete();
+		// await message.delete();
+		await handleProfanity(message, list.punishment || Punishment.Delete);
 	}
 
 	return;

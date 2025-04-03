@@ -1,5 +1,6 @@
 enum Punishment {
-	None = 0,
+	None = -1,
+	Delete = 0,
 	Warn = 1,
 	Timeout = 2,
 	Kick = 3,
