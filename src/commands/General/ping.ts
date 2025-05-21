@@ -3,7 +3,7 @@ import type {
 	SlashCommandProps,
 	CommandOptions,
 } from "commandkit";
-
+import { MessageFlags } from "discord.js";
 export const data: CommandData = {
 	name: "ping",
 	description: "Replies with Pong",

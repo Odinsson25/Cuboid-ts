@@ -13,7 +13,7 @@
   "type": "module",
   "dependencies": {
     "commandkit": "^0.1.10",
-    "discord.js": "^14.17.3",
+    "discord.js": "^14.19.3",
     "dotenv": "^16.4.7",
     "mongoose": "^8.9.5",
     "undici": "^7.3.0"
