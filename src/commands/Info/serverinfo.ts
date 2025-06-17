@@ -110,7 +110,10 @@ export const run = async ({ interaction, handler }: SlashCommandProps) => {
 			},
 			{
 				name: "🌠 Features",
-				value: `${guild?.features.join(", ") || "No features enabled"}`,
+				value: `${
+					guild?.features.join(", ")?.toLowerCase() ||
+					"No features enabled"
+				}`,
 				inline: false,
 			}
 		);
